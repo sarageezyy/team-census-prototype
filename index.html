@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Census – Your company and team</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      background: #fff;
+      color: #1a1a1a;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 248px;
+      min-width: 248px;
+      background: #f3f4f6;
+      border-right: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      padding: 16px 0;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 20px 20px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .brand-icon {
+      width: 32px; height: 32px;
+      background: #1a1a1a;
+      color: #fff;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 14px;
+    }
+
+    .brand-name {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .brand-chevron {
+      margin-left: auto;
+      color: #9ca3af;
+      font-size: 12px;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 16px 20px;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sidebar-help {
+      display: flex; align-items: center; gap: 8px;
+      color: #6b7280; cursor: pointer;
+    }
+
+    .sidebar-user {
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .avatar {
+      width: 32px; height: 32px;
+      background: #3b82f6;
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 600;
+    }
+
+    /* ── Main ── */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px 40px;
+    }
+
+    .breadcrumb {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .header-actions {
+      display: flex; gap: 10px;
+    }
+
+    .btn {
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all .15s;
+    }
+
+    .btn-outline {
+      background: #fff;
+      border-color: #d1d5db;
+      color: #374151;
+    }
+    .btn-outline:hover { background: #f9fafb; }
+
+    .btn-primary {
+      background: #2563eb;
+      color: #fff;
+      border-color: #2563eb;
+    }
+    .btn-primary:hover { background: #1d4ed8; }
+
+    /* ── Stepper ── */
+    .stepper {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      position: relative;
+    }
+
+    .step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 9px;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background: #e5e7eb;
+      z-index: 0;
+    }
+
+    .step.active:not(:last-child)::after { background: #e5e7eb; }
+
+    .step-dot {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      z-index: 1;
+      position: relative;
+    }
+
+    .step.active .step-dot {
+      background: #fff;
+      border: 2px solid #2563eb;
+      width: 18px; height: 18px;
+    }
+
+    .step-label {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #9ca3af;
+      white-space: nowrap;
+    }
+
+    .step.active .step-label { color: #2563eb; font-weight: 600; }
+
+    /* ── Info banner ── */
+    .info-banner {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 14px 18px;
+      color: #1e40af;
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+
+    /* ── Section header ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 18px; font-weight: 700;
+    }
+
+    .count-badge {
+      background: #2563eb;
+      color: #fff;
+      border-radius: 4px;
+      padding: 1px 7px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .btn-add-top {
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 14px;
+      border: 1px solid #2563eb;
+      color: #2563eb;
+      border-radius: 6px;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .btn-add-top:hover { background: #eff6ff; }
+
+    /* ── Table ── */
+    .table-wrapper {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    thead tr {
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    th .col-header {
+      display: inline-flex; align-items: center; gap: 4px; cursor: pointer;
+    }
+
+    th .sort-icon { color: #9ca3af; font-size: 10px; }
+
+    tbody tr {
+      border-bottom: 1px solid #f3f4f6;
+      transition: background .1s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f9fafb; }
+
+    td {
+      padding: 10px 16px;
+      font-size: 14px;
+      color: #374151;
+      vertical-align: middle;
+    }
+
+    .you-badge {
+      background: #f3f4f6;
+      color: #6b7280;
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-right: 8px;
+    }
+
+    .editable-cell {
+      position: relative;
+    }
+
+    .editable-cell input {
+      border: 1px solid transparent;
+      background: transparent;
+      width: 100%;
+      font-size: 14px;
+      color: #374151;
+      outline: none;
+      padding: 4px 6px;
+      border-radius: 4px;
+    }
+
+    .editable-cell input:focus {
+      background: #eff6ff;
+      border: 1px solid #2563eb;
+    }
+
+    .select-cell {
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    .select-cell select {
+      border: 1px solid transparent;
+      background: transparent;
+      font-size: 14px;
+      color: #374151;
+      cursor: pointer;
+      outline: none;
+      padding: 4px 6px;
+      border-radius: 4px;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .select-cell select:focus {
+      background: #eff6ff;
+      border: 1px solid #2563eb;
+    }
+
+    .select-cell .chevron {
+      color: #9ca3af;
+      font-size: 11px;
+      pointer-events: none;
+    }
+
+    .cell-dash { color: #9ca3af; }
+
+    .cell-disabled {
+      background: #f9fafb;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    /* ── Warning banner ── */
+    .warn-banner {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 8px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .warn-banner-icon { font-size: 18px; flex-shrink: 0; }
+    .warn-banner-text { flex: 1; font-size: 14px; color: #92400e; }
+    .btn-skip {
+      padding: 7px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      color: #374151;
+      flex-shrink: 0;
+    }
+    .btn-skip:hover { background: #f9fafb; }
+
+    /* ── Census table divider ── */
+    th.census-divider, td.census-divider {
+      border-left: 2px solid #e5e7eb;
+      padding-left: 18px;
+    }
+
+    /* ── Sticky columns (page 4) ── */
+    #p4-table-wrapper table thead tr th:nth-child(1),
+    #p4-table-wrapper table tbody tr td:nth-child(1) {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: inherit;
+    }
+    #p4-table-wrapper table thead tr th:nth-child(2),
+    #p4-table-wrapper table tbody tr td:nth-child(2) {
+      position: sticky;
+      left: 40px;
+      z-index: 2;
+      background: inherit;
+      min-width: 160px;
+    }
+    #p4-table-wrapper table thead tr th:nth-child(3),
+    #p4-table-wrapper table tbody tr td:nth-child(3) {
+      position: sticky;
+      left: 200px;
+      z-index: 2;
+      background: inherit;
+      min-width: 140px;
+    }
+    /* Shadow on the last sticky column to indicate scroll */
+    #p4-table-wrapper table thead tr th:nth-child(3),
+    #p4-table-wrapper table tbody tr td:nth-child(3) {
+      box-shadow: 4px 0 8px -2px rgba(0,0,0,.08);
+      clip-path: inset(0 -12px 0 0);
+    }
+    /* thead needs a higher z-index so it sits above sticky body cells */
+    #p4-table-wrapper table thead tr th {
+      z-index: 3;
+    }
+    /* Dep rows have a non-white background — keep it on sticky cells */
+    #p4-table-wrapper table tbody tr.dep-row td {
+      background: #fafafa;
+    }
+
+    /* ── Add dependent link ── */
+    .btn-add-dep {
+      background: none;
+      border: none;
+      color: #2563eb;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 0;
+    }
+    .btn-add-dep:hover { text-decoration: underline; }
+
+    /* ── Dependent sub-row ── */
+    tr.dep-row td { background: #fafafa; padding-top: 8px; padding-bottom: 8px; }
+    tr.dep-row td:first-child { }
+    .dep-name-cell { display: flex; align-items: center; gap: 8px; padding-left: 24px; }
+    .dep-label { font-size: 13px; color: #6b7280; font-style: italic; }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      color: #9ca3af;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px 6px;
+      border-radius: 4px;
+      opacity: 0;
+      transition: opacity .15s, color .15s;
+    }
+
+    tr:hover .delete-btn { opacity: 1; }
+    .delete-btn:hover { color: #ef4444; background: #fef2f2; }
+
+    /* ── Add a member inline ── */
+    .add-member-row td {
+      padding: 12px 16px;
+    }
+
+    .btn-add-inline {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: #2563eb;
+      font-size: 14px;
+      font-weight: 500;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 4px;
+    }
+    .btn-add-inline:hover { background: #eff6ff; }
+
+    /* ── New-row editing state ── */
+    tr.new-row {
+      background: #f8faff;
+      outline: 2px solid #2563eb;
+      outline-offset: -2px;
+    }
+
+    tr.new-row td { padding: 8px 16px; }
+
+    tr.new-row .editable-cell input {
+      border: 1px solid #d1d5db;
+      background: #fff;
+      border-radius: 5px;
+      padding: 6px 8px;
+    }
+
+    tr.new-row .editable-cell input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+      background: #fff;
+    }
+
+    tr.new-row .select-cell select {
+      border: 1px solid #d1d5db;
+      background: #fff;
+      border-radius: 5px;
+      padding: 6px 8px;
+    }
+
+    tr.new-row .select-cell select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+    }
+
+    tr.new-row .row-actions {
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    .btn-confirm {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 12px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-confirm:hover { background: #1d4ed8; }
+
+    .btn-discard {
+      background: none;
+      border: none;
+      color: #9ca3af;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 4px;
+      line-height: 1;
+    }
+    .btn-discard:hover { color: #ef4444; background: #fef2f2; }
+
+    /* ── Completed step ── */
+    .step.done .step-dot {
+      background: #16a34a;
+      border: none;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      font-size: 11px;
+    }
+    .step.done .step-label { color: #6b7280; font-weight: 400; }
+
+    /* ── Page views ── */
+    .page-view { display: none; }
+    .page-view.active { display: contents; }
+
+    /* ── Table scroll wrapper ── */
+    .table-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+    }
+
+    /* Fade shadow on right edge when scrollable */
+    .table-scroll-container {
+      position: relative;
+    }
+    .table-scroll-container::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0;
+      width: 40px;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,.85));
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .table-scroll-container.can-scroll-right::after { opacity: 1; }
+    .table-scroll-container::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 40px;
+      background: linear-gradient(to left, transparent, rgba(255,255,255,.85));
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .table-scroll-container.can-scroll-left::before { opacity: 1; }
+
+    table { min-width: 600px; }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">J</div>
+    <span class="brand-name">Ribbons Forever</span>
+    <span class="brand-chevron">⌃⌄</span>
+  </div>
+  <div class="sidebar-footer">
+    <div class="sidebar-help">
+      <span>?</span>
+      <span>Help</span>
+    </div>
+    <div class="sidebar-user">
+      <div class="avatar">AF</div>
+      <span>Albert Flores</span>
+    </div>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+  <div class="breadcrumb">Home</div>
+
+  <div class="page-header">
+    <h1 class="page-title">Your company and team</h1>
+    <div class="header-actions">
+      <button class="btn btn-outline" id="btn-back">Back</button>
+      <button class="btn btn-primary" id="btn-save">Save and continue</button>
+    </div>
+  </div>
+
+  <!-- Stepper (shared, updated by JS) -->
+  <div class="stepper" id="stepper">
+    <div class="step" id="step-1">
+      <div class="step-dot"></div>
+      <div class="step-label">Member details</div>
+    </div>
+    <div class="step" id="step-2">
+      <div class="step-dot"></div>
+      <div class="step-label">Work location</div>
+    </div>
+    <div class="step" id="step-3">
+      <div class="step-dot"></div>
+      <div class="step-label">Title and wage</div>
+    </div>
+    <div class="step" id="step-4">
+      <div class="step-dot"></div>
+      <div class="step-label">Health census</div>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 1: Member details ══ -->
+  <div class="page-view" id="page-1">
+
+    <div class="info-banner">
+      For accurate quotes, add all paid and unpaid owners, and full-time and part-time W-2 employees.
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">
+        Team members
+        <span class="count-badge" id="count-badge">1</span>
+      </div>
+      <button class="btn-add-top" id="btn-add-top">
+        <span style="font-size:16px">+</span> Add a member
+      </button>
+    </div>
+
+    <div class="table-scroll-container" id="p1-scroll-container">
+      <div class="table-wrapper" id="p1-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:40px"></th>
+              <th><span class="col-header">Legal first name <span class="sort-icon">▼</span></span></th>
+              <th><span class="col-header">Legal middle name <span class="sort-icon">▼</span></span></th>
+              <th><span class="col-header">Legal last name <span class="sort-icon">▼</span></span></th>
+              <th><span class="col-header">Work email <span class="sort-icon">▼</span></span></th>
+              <th><span class="col-header">Member type <span class="sort-icon">▼</span></span></th>
+              <th><span class="col-header">Pay type <span class="sort-icon">▼</span></span></th>
+              <th style="width:40px"></th>
+            </tr>
+          </thead>
+          <tbody id="members-tbody"></tbody>
+          <tfoot>
+            <tr class="add-member-row">
+              <td colspan="8">
+                <button class="btn-add-inline" id="btn-add-inline">
+                  <span style="font-size:16px">+</span> Add a member
+                </button>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /page-1 -->
+
+  <!-- ══ PAGE 2: Work location ══ -->
+  <div class="page-view" id="page-2">
+
+    <div class="info-banner">
+      Fill in your team's work location info.
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">
+        Team members
+        <span class="count-badge" id="count-badge-2">1</span>
+      </div>
+    </div>
+
+    <div class="table-scroll-container" id="p2-scroll-container">
+      <div class="table-wrapper" id="p2-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:40px"></th>
+              <th><span class="col-header">Employee name <span class="sort-icon">▼</span></span></th>
+              <th><span class="col-header">Remote <span class="sort-icon">▼</span></span></th>
+              <th><span class="col-header">Office location <span class="sort-icon">▼</span></span></th>
+              <th><span class="col-header">Work state <span class="sort-icon">▼</span></span></th>
+            </tr>
+          </thead>
+          <tbody id="location-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /page-2 -->
+
+  <!-- ══ PAGE 3: Title and wage ══ -->
+  <div class="page-view" id="page-3">
+
+    <div class="info-banner">
+      Fill in your team's title and wage info.
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">
+        Team members
+        <span class="count-badge" id="count-badge-3">1</span>
+      </div>
+    </div>
+
+    <div class="table-scroll-container" id="p3-scroll-container">
+      <div class="table-wrapper" id="p3-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:40px"></th>
+              <th><span class="col-header">Employee name <span class="sort-icon">▼</span></span></th>
+              <th><span class="col-header">Annual salary <span class="sort-icon">▼</span></span></th>
+              <th><span class="col-header">Hourly wage <span class="sort-icon">▼</span></span></th>
+              <th><span class="col-header">Hours per week <span class="sort-icon">▼</span></span></th>
+              <th><span class="col-header">Exemption status <span class="sort-icon">▼</span></span></th>
+            </tr>
+          </thead>
+          <tbody id="wage-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /page-3 -->
+
+  <!-- ══ PAGE 4: Health census ══ -->
+  <div class="page-view" id="page-4">
+
+    <div class="warn-banner">
+      <span class="warn-banner-icon">⚠️</span>
+      <span class="warn-banner-text">Make sure to include all team members and their dependents for an accurate quote.</span>
+      <button class="btn-skip">Skip Health Insurance quote</button>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">
+        Team members
+        <span class="count-badge" id="count-badge-4">1</span>
+      </div>
+    </div>
+
+    <div class="table-scroll-container" id="p4-scroll-container">
+      <div class="table-wrapper" id="p4-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:40px"></th>
+              <th><span class="col-header">Employee name <span class="sort-icon">▼</span></span></th>
+              <th>Dependents</th>
+              <th class="census-divider">Legal first name</th>
+              <th>Legal last name</th>
+              <th>Sex</th>
+              <th>Date of birth</th>
+              <th>Home zip</th>
+            </tr>
+          </thead>
+          <tbody id="census-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /page-4 -->
+
+</main>
+
+<script>
+  // ── Data ─────────────────────────────────────────────────────────────────
+  const MEMBER_TYPES  = ['', 'Employee', 'Owner', 'Partner', 'Contractor'];
+  const PAY_TYPES     = ['', 'Salary', 'Hourly'];
+  const REMOTE_OPTS   = ['', 'Yes', 'No', 'Hybrid'];
+  const OFFICE_OPTS   = ['', 'Main office', 'Branch office', 'Co-working space'];
+  const US_STATES     = ['','AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA',
+                         'KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ',
+                         'NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT',
+                         'VA','WA','WV','WI','WY'];
+  const EXEMPTION_OPTS = ['', 'Exempt', 'Non-exempt'];
+  const SEX_OPTS       = ['', 'Male', 'Female', 'Non-binary', 'Prefer not to say'];
+  const DEP_TYPE_OPTS  = ['', 'Spouse', 'Child', 'Domestic partner', 'Parent', 'Sibling'];
+
+  let members = [
+    { id: 1, isYou: true, first: 'Albert', middle: '', last: 'Flores',
+      email: 'email@email.com', type: '', pay: '',
+      remote: '', officeLocation: '', workState: '',
+      annualSalary: '', hourlyWage: '', hoursPerWeek: '', exemptionStatus: '',
+      censusFirst: '', censusLast: '', sex: '', dob: '', homeZip: '',
+      dependents: [] }
+  ];
+  let nextDepId = 100;
+  let nextId   = 2;
+  let addingRow = false;
+  let currentStep = 1;
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function esc(str) {
+    return (str || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+  }
+
+  function fullName(m) { return [m.first, m.last].filter(Boolean).join(' ') || '—'; }
+
+  function formatSalary(val) {
+    const digits = String(val || '').replace(/\D/g, '');
+    return digits ? Number(digits).toLocaleString('en-US') : '';
+  }
+
+  function opts(list, current) {
+    return list.map(v => `<option value="${v}" ${current===v?'selected':''}>${v||'Select'}</option>`).join('');
+  }
+
+  // ── Stepper ───────────────────────────────────────────────────────────────
+  function renderStepper() {
+    const steps = [
+      { id: 'step-1', label: 'Member details' },
+      { id: 'step-2', label: 'Work location' },
+      { id: 'step-3', label: 'Title and wage' },
+      { id: 'step-4', label: 'Health census' },
+    ];
+    steps.forEach((s, i) => {
+      const el   = document.getElementById(s.id);
+      const dot  = el.querySelector('.step-dot');
+      const lbl  = el.querySelector('.step-label');
+      const num  = i + 1;
+
+      el.className = 'step';
+      dot.textContent = '';
+
+      if (num < currentStep) {
+        el.classList.add('done');
+        dot.textContent = '✓';
+      } else if (num === currentStep) {
+        el.classList.add('active');
+      }
+      lbl.textContent = s.label;
+    });
+  }
+
+  // ── Page visibility ───────────────────────────────────────────────────────
+  function showPage(n) {
+    document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+    document.getElementById(`page-${n}`).classList.add('active');
+  }
+
+  // ── Page 1: Member details ────────────────────────────────────────────────
+  function renderPage1() {
+    const tbody = document.getElementById('members-tbody');
+    document.getElementById('count-badge').textContent = members.length;
+
+    tbody.querySelectorAll('tr:not(.new-row)').forEach(r => r.remove());
+    const newRow = tbody.querySelector('tr.new-row');
+
+    members.forEach(m => {
+      const tr = document.createElement('tr');
+      tr.dataset.memberId = m.id;
+      tr.innerHTML = `
+        <td>${m.isYou ? '<span class="you-badge">You</span>' : ''}</td>
+        <td class="editable-cell"><input value="${esc(m.first)}" data-id="${m.id}" data-field="first" placeholder="First name" /></td>
+        <td class="editable-cell"><input value="${esc(m.middle)}" data-id="${m.id}" data-field="middle" placeholder="—" /></td>
+        <td class="editable-cell"><input value="${esc(m.last)}" data-id="${m.id}" data-field="last" placeholder="Last name" /></td>
+        <td class="editable-cell"><input value="${esc(m.email)}" data-id="${m.id}" data-field="email" placeholder="email@company.com" type="email" /></td>
+        <td><div class="select-cell">
+          <select data-id="${m.id}" data-field="type">${opts(MEMBER_TYPES, m.type)}</select>
+          <span class="chevron">▼</span>
+        </div></td>
+        <td><div class="select-cell">
+          <select data-id="${m.id}" data-field="pay">${opts(PAY_TYPES, m.pay)}</select>
+          <span class="chevron">▼</span>
+        </div></td>
+        <td>${m.isYou ? '' : `<button class="delete-btn" data-id="${m.id}" title="Remove">✕</button>`}</td>
+      `;
+      if (newRow) tbody.insertBefore(tr, newRow); else tbody.appendChild(tr);
+    });
+
+    tbody.querySelectorAll('tr:not(.new-row) input[data-field]').forEach(inp => {
+      inp.addEventListener('input', e => {
+        const m = members.find(m => m.id === +e.target.dataset.id);
+        if (m) m[e.target.dataset.field] = e.target.value;
+      });
+    });
+    tbody.querySelectorAll('tr:not(.new-row) select[data-field]').forEach(sel => {
+      sel.addEventListener('change', e => {
+        const m = members.find(m => m.id === +e.target.dataset.id);
+        if (m) m[e.target.dataset.field] = e.target.value;
+      });
+    });
+    tbody.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        members = members.filter(m => m.id !== +e.currentTarget.dataset.id);
+        renderPage1();
+      });
+    });
+  }
+
+  // ── Page 1: Inline new-row ────────────────────────────────────────────────
+  function addInlineRow() {
+    if (addingRow) { document.querySelector('tr.new-row input')?.focus(); return; }
+    addingRow = true;
+    const tbody = document.getElementById('members-tbody');
+    const tr = document.createElement('tr');
+    tr.className = 'new-row';
+    tr.innerHTML = `
+      <td></td>
+      <td class="editable-cell"><input data-field="first" placeholder="First name" /></td>
+      <td class="editable-cell"><input data-field="middle" placeholder="" /></td>
+      <td class="editable-cell"><input data-field="last" placeholder="Last name" /></td>
+      <td class="editable-cell"><input data-field="email" placeholder="email@company.com" type="email" /></td>
+      <td><div class="select-cell">
+        <select data-field="type">${opts(MEMBER_TYPES,'')}</select>
+        <span class="chevron">▼</span>
+      </div></td>
+      <td><div class="select-cell">
+        <select data-field="pay">${opts(PAY_TYPES,'')}</select>
+        <span class="chevron">▼</span>
+      </div></td>
+      <td><div class="row-actions">
+        <button class="btn-confirm" id="confirm-new-row">Add</button>
+        <button class="btn-discard" id="discard-new-row" title="Discard">✕</button>
+      </div></td>
+    `;
+    tbody.appendChild(tr);
+    tr.querySelector('input[data-field="first"]').focus();
+    tr.querySelector('#confirm-new-row').addEventListener('click', commitNewRow);
+    tr.querySelector('#discard-new-row').addEventListener('click', discardNewRow);
+    tr.querySelectorAll('input, select').forEach(el => {
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Enter') commitNewRow();
+        if (e.key === 'Escape') discardNewRow();
+      });
+    });
+    tr.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function commitNewRow() {
+    const tr = document.querySelector('tr.new-row');
+    if (!tr) return;
+    const get = f => tr.querySelector(`[data-field="${f}"]`).value.trim();
+    let invalid = false;
+    ['first','last','email'].forEach(f => {
+      const inp = tr.querySelector(`input[data-field="${f}"]`);
+      if (inp && !inp.value.trim()) {
+        inp.style.borderColor = '#ef4444';
+        inp.style.boxShadow = '0 0 0 3px rgba(239,68,68,.15)';
+        invalid = true;
+      }
+    });
+    if (invalid) { tr.querySelector('input[data-field="first"]').focus(); return; }
+    members.push({ id: nextId++, isYou: false,
+      first: get('first'), middle: get('middle'), last: get('last'),
+      email: get('email'), type: get('type'), pay: get('pay'),
+      remote: '', officeLocation: '', workState: '',
+      annualSalary: '', hourlyWage: '', hoursPerWeek: '', exemptionStatus: '',
+      censusFirst: '', censusLast: '', sex: '', dob: '', homeZip: '',
+      dependents: [] });
+    tr.remove(); addingRow = false;
+    renderPage1();
+  }
+
+  function discardNewRow() {
+    const tr = document.querySelector('tr.new-row');
+    if (tr) tr.remove();
+    addingRow = false;
+  }
+
+  // ── Page 2: Work location ─────────────────────────────────────────────────
+  function renderPage2() {
+    const tbody = document.getElementById('location-tbody');
+    document.getElementById('count-badge-2').textContent = members.length;
+    tbody.innerHTML = '';
+
+    members.forEach(m => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${m.isYou ? '<span class="you-badge">You</span>' : ''}</td>
+        <td style="font-weight:500">${esc(fullName(m))}</td>
+        <td><div class="select-cell">
+          <select data-id="${m.id}" data-loc="remote">${opts(REMOTE_OPTS, m.remote)}</select>
+          <span class="chevron">▼</span>
+        </div></td>
+        <td class="${m.remote === 'Yes' ? 'cell-disabled' : ''}">
+          ${m.remote === 'Yes'
+            ? `<span class="cell-dash">—</span>`
+            : `<div class="select-cell">
+                <select data-id="${m.id}" data-loc="officeLocation">${opts(OFFICE_OPTS, m.officeLocation)}</select>
+                <span class="chevron">▼</span>
+               </div>`}
+        </td>
+        <td><div class="select-cell">
+          <select data-id="${m.id}" data-loc="workState">${opts(US_STATES, m.workState)}</select>
+          <span class="chevron">▼</span>
+        </div></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    tbody.querySelectorAll('select[data-loc]').forEach(sel => {
+      sel.addEventListener('change', e => {
+        const m = members.find(m => m.id === +e.target.dataset.id);
+        if (!m) return;
+        m[e.target.dataset.loc] = e.target.value;
+        if (e.target.dataset.loc === 'remote') {
+          if (m.remote === 'Yes') m.officeLocation = '';
+          renderPage2();
+        }
+      });
+    });
+  }
+
+  // ── Page 3: Title and wage ────────────────────────────────────────────────
+  function renderPage3() {
+    const tbody = document.getElementById('wage-tbody');
+    document.getElementById('count-badge-3').textContent = members.length;
+    tbody.innerHTML = '';
+
+    members.forEach(m => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${m.isYou ? '<span class="you-badge">You</span>' : ''}</td>
+        <td style="font-weight:500">${esc(fullName(m))}</td>
+        <td class="editable-cell${m.pay !== 'Salary' ? ' cell-disabled' : ''}">
+          ${m.pay === 'Salary'
+            ? `<div style="display:flex;align-items:center;gap:4px">
+                <span style="color:#6b7280">$</span>
+                <input value="${esc(formatSalary(m.annualSalary))}" data-id="${m.id}" data-wage="annualSalary"
+                  placeholder="0" style="width:110px" type="text" inputmode="numeric" />
+               </div>`
+            : `<span class="cell-dash">—</span>`}
+        </td>
+        <td class="editable-cell${m.pay !== 'Hourly' ? ' cell-disabled' : ''}">
+          ${m.pay === 'Hourly'
+            ? `<div style="display:flex;align-items:center;gap:4px">
+                <span style="color:#6b7280">$</span>
+                <input value="${esc(m.hourlyWage)}" data-id="${m.id}" data-wage="hourlyWage"
+                  placeholder="0.00" style="width:70px" type="text" inputmode="numeric" />
+               </div>`
+            : `<span class="cell-dash">—</span>`}
+        </td>
+        <td class="editable-cell${m.pay !== 'Hourly' ? ' cell-disabled' : ''}">
+          ${m.pay === 'Hourly'
+            ? `<input value="${esc(m.hoursPerWeek)}" data-id="${m.id}" data-wage="hoursPerWeek"
+                 placeholder="" style="width:80px" type="text" inputmode="numeric" />`
+            : `<span class="cell-dash">—</span>`}
+        </td>
+        <td><div class="select-cell">
+          <select data-id="${m.id}" data-wage="exemptionStatus">
+            ${opts(EXEMPTION_OPTS, m.exemptionStatus)}
+          </select>
+          <span class="chevron">▼</span>
+        </div></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    tbody.querySelectorAll('input[data-wage]').forEach(inp => {
+      inp.addEventListener('input', e => {
+        const m = members.find(m => m.id === +e.target.dataset.id);
+        if (!m) return;
+        if (e.target.dataset.wage === 'annualSalary') {
+          const raw = e.target.value.replace(/,/g, '');
+          m.annualSalary = raw;
+          const formatted = formatSalary(raw);
+          const pos = e.target.selectionStart;
+          const prevLen = e.target.value.length;
+          e.target.value = formatted;
+          // Keep cursor position adjusted for added/removed commas
+          const diff = formatted.length - prevLen;
+          e.target.setSelectionRange(pos + diff, pos + diff);
+        } else {
+          m[e.target.dataset.wage] = e.target.value;
+        }
+      });
+    });
+    tbody.querySelectorAll('select[data-wage]').forEach(sel => {
+      sel.addEventListener('change', e => {
+        const m = members.find(m => m.id === +e.target.dataset.id);
+        if (m) m[e.target.dataset.wage] = e.target.value;
+      });
+    });
+  }
+
+  // ── Page 4: Health census ─────────────────────────────────────────────────
+  function censusRow(person, memberId, isDependent) {
+    const tr = document.createElement('tr');
+    if (isDependent) tr.classList.add('dep-row');
+    tr.dataset.personId  = person.id;
+    tr.dataset.memberId  = memberId;
+    tr.dataset.isDep     = isDependent ? '1' : '';
+
+    const nameCell = isDependent
+      ? `<td></td>
+         <td></td>
+         <td>
+           <div style="display:flex;align-items:center;gap:8px">
+             <div class="select-cell">
+               <select data-id="${person.id}" data-member-id="${memberId}" data-census="depType">
+                 ${opts(DEP_TYPE_OPTS, person.depType)}
+               </select>
+               <span class="chevron">▼</span>
+             </div>
+             <button class="delete-btn dep-delete" data-dep-id="${person.id}" data-member-id="${memberId}" title="Remove" style="opacity:1">✕</button>
+           </div>
+         </td>`
+      : `<td>${person.isYou ? '<span class="you-badge">You</span>' : ''}</td>
+         <td style="font-weight:500">${esc(fullName(person))}</td>
+         <td><button class="btn-add-dep" data-member-id="${memberId}">Add dependent</button></td>`;
+
+    tr.innerHTML = `
+      ${nameCell}
+      <td class="census-divider${isDependent ? ' editable-cell' : ' cell-disabled'}">
+        ${isDependent
+          ? `<input value="${esc(person.censusFirst)}" data-id="${person.id}" data-member-id="${memberId}" data-is-dep="1" data-census="censusFirst" placeholder="" />`
+          : `<span class="cell-dash">—</span>`}
+      </td>
+      <td class="${isDependent ? 'editable-cell' : 'cell-disabled'}">
+        ${isDependent
+          ? `<input value="${esc(person.censusLast)}" data-id="${person.id}" data-member-id="${memberId}" data-is-dep="1" data-census="censusLast" placeholder="" />`
+          : `<span class="cell-dash">—</span>`}
+      </td>
+      <td><div class="select-cell">
+        <select data-id="${person.id}" data-member-id="${memberId}" data-is-dep="${isDependent?'1':''}" data-census="sex">
+          ${opts(SEX_OPTS, person.sex)}
+        </select>
+        <span class="chevron">▼</span>
+      </div></td>
+      <td class="editable-cell">
+        <input value="${esc(person.dob)}" data-id="${person.id}" data-member-id="${memberId}" data-is-dep="${isDependent?'1':''}" data-census="dob" placeholder="mm/dd/yyyy" style="width:100px" />
+      </td>
+      <td class="editable-cell">
+        <input value="${esc(person.homeZip)}" data-id="${person.id}" data-member-id="${memberId}" data-is-dep="${isDependent?'1':''}" data-census="homeZip" placeholder="" style="width:70px" maxlength="5" />
+      </td>
+    `;
+    return tr;
+  }
+
+  function renderPage4() {
+    const tbody = document.getElementById('census-tbody');
+    document.getElementById('count-badge-4').textContent = members.length;
+    tbody.innerHTML = '';
+
+    members.forEach(m => {
+      tbody.appendChild(censusRow(m, m.id, false));
+      m.dependents.forEach(dep => tbody.appendChild(censusRow(dep, m.id, true)));
+    });
+
+    // Census field listeners
+    tbody.querySelectorAll('input[data-census]').forEach(inp => {
+      inp.addEventListener('input', e => {
+        const { id, memberId, isDep, census } = e.target.dataset;
+        const person = isDep === '1'
+          ? members.find(m => m.id === +memberId)?.dependents.find(d => d.id === +id)
+          : members.find(m => m.id === +id);
+        if (!person) return;
+        if (census === 'dob') {
+          const digits = e.target.value.replace(/\D/g, '').slice(0, 8);
+          let formatted = digits;
+          if (digits.length > 4) formatted = digits.slice(0,2) + '/' + digits.slice(2,4) + '/' + digits.slice(4);
+          else if (digits.length > 2) formatted = digits.slice(0,2) + '/' + digits.slice(2);
+          e.target.value = formatted;
+          person.dob = formatted;
+        } else {
+          person[census] = e.target.value;
+        }
+      });
+    });
+    tbody.querySelectorAll('select[data-census]').forEach(sel => {
+      sel.addEventListener('change', e => {
+        const { id, memberId, isDep, census } = e.target.dataset;
+        const person = isDep === '1'
+          ? members.find(m => m.id === +memberId)?.dependents.find(d => d.id === +id)
+          : members.find(m => m.id === +id);
+        if (person) person[census] = e.target.value;
+      });
+    });
+
+    // Add dependent
+    tbody.querySelectorAll('.btn-add-dep').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const m = members.find(m => m.id === +e.target.dataset.memberId);
+        if (!m) return;
+        m.dependents.push({ id: nextDepId++, depType: '', censusFirst: '', censusLast: '', sex: '', dob: '', homeZip: '' });
+        renderPage4();
+        // Focus the new dependent's first name
+        const inputs = document.querySelectorAll(`input[data-census="censusFirst"][data-member-id="${m.id}"]`);
+        inputs[inputs.length - 1]?.focus();
+      });
+    });
+
+    // Delete dependent
+    tbody.querySelectorAll('.dep-delete').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const { depId, memberId } = e.currentTarget.dataset;
+        const m = members.find(m => m.id === +memberId);
+        if (m) m.dependents = m.dependents.filter(d => d.id !== +depId);
+        renderPage4();
+      });
+    });
+  }
+
+  // ── Validation helpers ────────────────────────────────────────────────────
+  function markError(el) {
+    if (!el) return;
+    el.style.borderColor = '#ef4444';
+    el.style.boxShadow = '0 0 0 3px rgba(239,68,68,.15)';
+    const clear = () => {
+      el.style.borderColor = '';
+      el.style.boxShadow = '';
+      el.removeEventListener('input', clear);
+      el.removeEventListener('change', clear);
+    };
+    el.addEventListener('input', clear);
+    el.addEventListener('change', clear);
+  }
+
+  function validatePage1() {
+    let valid = true;
+    members.forEach(m => {
+      ['first','last','email'].forEach(f => {
+        const el = document.querySelector(`input[data-id="${m.id}"][data-field="${f}"]`);
+        if (el && !el.value.trim()) { markError(el); valid = false; }
+      });
+      ['type','pay'].forEach(f => {
+        const el = document.querySelector(`select[data-id="${m.id}"][data-field="${f}"]`);
+        if (el && !el.value) { markError(el); valid = false; }
+      });
+    });
+    return valid;
+  }
+
+  function validatePage2() {
+    let valid = true;
+    members.forEach(m => {
+      const remoteEl = document.querySelector(`select[data-id="${m.id}"][data-loc="remote"]`);
+      if (remoteEl && !remoteEl.value) { markError(remoteEl); valid = false; }
+      if (m.remote !== 'Yes') {
+        const officeEl = document.querySelector(`select[data-id="${m.id}"][data-loc="officeLocation"]`);
+        if (officeEl && !officeEl.value) { markError(officeEl); valid = false; }
+      }
+      const stateEl = document.querySelector(`select[data-id="${m.id}"][data-loc="workState"]`);
+      if (stateEl && !stateEl.value) { markError(stateEl); valid = false; }
+    });
+    return valid;
+  }
+
+  function validatePage3() {
+    let valid = true;
+    members.forEach(m => {
+      if (m.pay === 'Salary') {
+        const el = document.querySelector(`input[data-id="${m.id}"][data-wage="annualSalary"]`);
+        if (el && !el.value.replace(/,/g,'').trim()) { markError(el); valid = false; }
+      }
+      if (m.pay === 'Hourly') {
+        ['hourlyWage','hoursPerWeek'].forEach(f => {
+          const el = document.querySelector(`input[data-id="${m.id}"][data-wage="${f}"]`);
+          if (el && !el.value.trim()) { markError(el); valid = false; }
+        });
+      }
+      const exemptEl = document.querySelector(`select[data-id="${m.id}"][data-wage="exemptionStatus"]`);
+      if (exemptEl && !exemptEl.value) { markError(exemptEl); valid = false; }
+    });
+    return valid;
+  }
+
+  function validatePage4() {
+    let valid = true;
+    members.forEach(m => {
+      // Employee: sex, dob, homeZip (first/last are greyed out, not required here)
+      const sexEl = document.querySelector(`select[data-id="${m.id}"][data-census="sex"][data-is-dep=""]`);
+      if (sexEl && !sexEl.value) { markError(sexEl); valid = false; }
+      ['dob','homeZip'].forEach(f => {
+        const el = document.querySelector(`input[data-id="${m.id}"][data-census="${f}"][data-is-dep=""]`);
+        if (el && !el.value.trim()) { markError(el); valid = false; }
+      });
+      // Dependents: all fields required if dependent exists
+      m.dependents.forEach(dep => {
+        const typeEl = document.querySelector(`select[data-id="${dep.id}"][data-census="depType"]`);
+        if (typeEl && !typeEl.value) { markError(typeEl); valid = false; }
+        ['censusFirst','censusLast'].forEach(f => {
+          const el = document.querySelector(`input[data-id="${dep.id}"][data-census="${f}"]`);
+          if (el && !el.value.trim()) { markError(el); valid = false; }
+        });
+        const depSexEl = document.querySelector(`select[data-id="${dep.id}"][data-census="sex"]`);
+        if (depSexEl && !depSexEl.value) { markError(depSexEl); valid = false; }
+        ['dob','homeZip'].forEach(f => {
+          const el = document.querySelector(`input[data-id="${dep.id}"][data-census="${f}"]`);
+          if (el && !el.value.trim()) { markError(el); valid = false; }
+        });
+      });
+    });
+    return valid;
+  }
+
+  // ── Navigation ────────────────────────────────────────────────────────────
+  const PAGE_RENDERERS  = { 1: renderPage1, 2: renderPage2, 3: renderPage3, 4: renderPage4 };
+  const PAGE_VALIDATORS = { 1: validatePage1, 2: validatePage2, 3: validatePage3, 4: validatePage4 };
+
+  document.getElementById('btn-save').addEventListener('click', () => {
+    if (!PAGE_VALIDATORS[currentStep]?.()) return;
+    if (currentStep < 4) {
+      discardNewRow();
+      currentStep++;
+      showPage(currentStep);
+      renderStepper();
+      PAGE_RENDERERS[currentStep]?.();
+    }
+  });
+
+  document.getElementById('btn-back').addEventListener('click', () => {
+    if (currentStep > 1) {
+      currentStep--;
+      showPage(currentStep);
+      renderStepper();
+      PAGE_RENDERERS[currentStep]?.();
+    }
+  });
+
+
+  // ── Add buttons (page 1) ──────────────────────────────────────────────────
+  document.getElementById('btn-add-top').addEventListener('click', addInlineRow);
+  document.getElementById('btn-add-inline').addEventListener('click', addInlineRow);
+
+  // ── Horizontal scroll shadows ─────────────────────────────────────────────
+  function initScrollShadow(containerId, wrapperId) {
+    const wrapper   = document.getElementById(wrapperId);
+    const container = document.getElementById(containerId);
+    if (!wrapper || !container) return;
+    function update() {
+      container.classList.toggle('can-scroll-left',  wrapper.scrollLeft > 2);
+      container.classList.toggle('can-scroll-right',
+        wrapper.scrollLeft < wrapper.scrollWidth - wrapper.clientWidth - 2);
+    }
+    wrapper.addEventListener('scroll', update);
+    new ResizeObserver(update).observe(wrapper);
+    update();
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  currentStep = 1;
+  showPage(1);
+  renderStepper();
+  renderPage1();
+  initScrollShadow('p1-scroll-container', 'p1-table-wrapper');
+  initScrollShadow('p2-scroll-container', 'p2-table-wrapper');
+  initScrollShadow('p3-scroll-container', 'p3-table-wrapper');
+  initScrollShadow('p4-scroll-container', 'p4-table-wrapper');
+</script>
+</body>
+</html>
