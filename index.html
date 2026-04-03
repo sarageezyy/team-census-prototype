@@ -791,6 +791,13 @@
 
   </div><!-- /page-4 -->
 
+  <!-- ══ PAGE 5: End of task ══ -->
+  <div class="page-view" id="page-5">
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:12px;text-align:center">
+      <div style="font-size:22px;font-weight:700;color:#1a1a1a">End of task, continue test</div>
+    </div>
+  </div><!-- /page-5 -->
+
 </main>
 
 <script>
@@ -1322,7 +1329,7 @@
 
   document.getElementById('btn-save').addEventListener('click', () => {
     if (!PAGE_VALIDATORS[currentStep]?.()) return;
-    if (currentStep < 4) {
+    if (currentStep <= 4) {
       discardNewRow();
       currentStep++;
       showPage(currentStep);
